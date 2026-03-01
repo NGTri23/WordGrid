@@ -1,0 +1,47 @@
+WordGrid
+  │
+  ├── dictionnaire/                     : Dossier où il y a les fichiers avec tous les mots
+  │    ├── complet/
+  │    │     ├── en_all.txt
+  │    │     ├── fr_all.txt
+  │    │     ├── fr_natural.txt
+  │    │     └── en_natural.txt
+  │    ├── en/
+  │    │    ├── all/
+  │    │    │    └── 4.txt -> 31.txt
+  │    │    └── narural/
+  │    │         └── 4.txt -> 14.txt
+  │    └── fr/
+  │         ├── all/
+  │         │    └── 4.txt -> 24.txt
+  │         │
+  │         └── narural/
+  │              └── 4.txt -> 15.txt
+  │
+  ├── templates/                        : Dossier où il y a tous les fichiers HTML
+  │       ├── base.html
+  │       ├── configuration.html
+  │       ├── fin_partie.html (fichier temporaire)
+  │       ├── index.html
+  │       └── play.html
+  │
+  ├── static/                           : Dossier avec les fichiers qui sont liés aux fichiers HTML
+  │       ├── images/                   : Dossier avec tous les images de BackGround pour le site
+  │       │       └── 1.jpg -> 8.jpg
+  │       │
+  │       └── style.css                 : Fichier style en CSS
+  │
+  ├── outils/
+  │     └── séparateur fichier.py
+  │
+  ├── main.py                           : Fichier pour comprendre le fonctionnement du jeu de base...
+  │                                       ...et la logique sur console
+  ├── TRIE.py                           : Fichier où il y a le système d'arbre Trie
+  ├── Dictionary_manager.py             : Fichier pour la gestion des dictionnaires et les mots
+  ├── Chronometre.py                    : Fichier pour avoir un chronomètre
+  ├── config.py                         : Fichier pour configurer les différents paramètres du jeu
+  ├── app.py                            : Fichier pour lancer un serveur site Web local (Flask) qui...
+                                          ...relie du Python au HTML
+
+
+└ ─ ├ │

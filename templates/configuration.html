@@ -1,0 +1,101 @@
+<!-- Récupération code de base du html -->
+{% extends 'base.html' %}
+
+<!-- Corps du code -->
+{% block bodyCode %}
+  <h1>WordGrid</h1>
+  <h2>Configuration</h2>
+  <p>Personnalisez votre partie avant de jouer</p>
+
+  <form action="{{ url_for('game') }}" method="post">
+    <div class="groupe-form"> 
+      <!-- Pour la partie langue -->
+      <label for="langue">Langue : </label>
+      <select name="langue" id="langue">
+        {% for cle, langue in liste_langue.items() %}
+          {% if cle == configuration.langue %}
+            <option value="{{cle}}" selected>{{langue}}</option>
+          {% else %}
+            <option value="{{cle}}">{{langue}}</option>
+          {% endif %}
+        {% endfor %}
+      </select>
+    </div>
+
+    <div class="groupe-form"> 
+      <!-- Pour la partie thème -->
+      <label for="theme">Thème : </label>
+      <select name="theme" id="theme">
+        {% for cle, theme in liste_theme.items() %}
+          {% if cle == configuration.theme %}
+            <option value="{{cle}}" selected>{{theme}}</option>
+          {% else %}
+            <option value="{{cle}}">{{theme}}</option>
+          {% endif %}
+        {% endfor %}
+      </select>
+    </div>
+
+    <div class="groupe-form"> 
+      <!-- Pour la partie mode du jeu -->
+      <label for="mode">Mode de jeu : </label>
+      <select name="modeJeu" id="modeJeu">
+        {% for cle, val in liste_modeJeu.items() %}
+          {% if val == configuration.modeJeu %}
+            <option value="{{val}}" selected>{{cle}}</option>
+          {% else %}
+            <option value="{{val}}">{{cle}}</option>
+          {% endif %}
+        {% endfor %}
+      </select>
+    </div>
+
+    <div class="groupe-form">
+      <!-- Pour la partie longueur du mot -->
+      <label for="longueur_mot">Longueur du mot : {{configuration.longueur_mot}} lettres</label>
+      <input type="range" name="longueur_mot" id="longueur" min="4" max="8" 
+        value="{{configuration.longueur_mot}}" oninput="this.previousElementSibling.textContent = 'Longueur du mot : ' + this.value + ' lettres'">
+    </div>
+
+    <div class="groupe-form"> 
+      <!-- Pour la partie difficulté -->
+      
+      <label id="labelDifficulte" for="difficulte">
+        Difficulté : 
+        {% for cle, val in liste_difficulte.items() %}
+          {% if (10 - cle) == configuration.difficulte %}
+            {{val}} ({{cle}} essais)
+          {% endif %}
+        {% endfor %}
+      </label>
+      
+      <input type="range" name="difficulte" id="difficulte" min="0" max="6"
+        value="{{configuration.difficulte}}">
+      <script>
+        // Script permettant de modifier le text du label en fonction de la valeur du slide
+        const map = {{ liste_difficulte | tojson }};
+        const slider = document.getElementById("difficulte");
+        const label = document.getElementById("labelDifficulte");
+        slider.addEventListener("input", () => {
+          const cle = map[10 - slider.value]
+          label.textContent = `Difficulté : ${cle} (${10 - slider.value} essais)`;
+        });
+      </script>
+    </div>
+
+    <div class="groupe-form">
+      <!-- Bouton pour sélectionner aléatoirement les config -->
+       <input type="submit" value="Configuration aléatoire"
+        formaction="{{ url_for('menu_config') }}" name="random" class="btn random">
+    </div>
+    
+    <div class="grp_btn">
+      <!-- Bouton pour annuler les config et revenir en arrière -->
+      <input type="submit" name="retour_menu" class="btn return"
+        formaction="{{ url_for('index') }}" value="Retour au menu">
+      <!-- Bouton pour commencer une partie -->
+      <input type="submit" name="commencer_partie" class="btn play"
+        value="Lancer la partie">
+    </div>  
+  </form>
+{% endblock %}

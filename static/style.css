@@ -1,0 +1,256 @@
+/* CSS Style */
+
+/* Variables définies */
+:root {
+  --vert-foncé: #3FA34D;
+  --vert-clair: #6BCB77;
+
+  --bleu-foncé: #3A86FF;
+  --bleu-clair: #5EA0FF;
+
+  --rouge-foncé: #8B0000;
+  --rouge-clair: #c40000;
+}
+
+
+body{
+  font-family: Arial, Helvetica, sans-serif;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: black;
+  color: white;
+  margin: 0;
+  padding: 0;
+}
+
+/* Background img */
+.background {
+  position: fixed;
+  inset: 0;
+  background-image: var(--bg-image); /* image tiré dans : '/static/images' */
+  background-size: cover;
+  background-position: center;
+  filter: blur(3px) brightness(0.5);
+  z-index: -2;
+}
+
+/* Bloc central de jeu */
+.bloc_central {
+  background: rgba(255,255,255,0.15);
+  backdrop-filter: blur(20px);
+  padding: 40px 60px;
+  border-radius: 20px;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+  text-align: center;
+  align-content: center;
+  min-width: 30%;
+  min-height: 40%;
+  margin: 5em 0;
+}
+.bloc_central h1{
+  font-size: 3em;
+  margin: 0;
+}
+
+/* LightBox message de fin de la partie */
+/* Victoire */
+.win {
+  border: 2px solid var(--vert-foncé);
+  box-shadow: 0 0 25px rgba(46, 204, 113, 0.5);
+}
+/* Défaite */
+.lose {
+  border: 2px solid var(--rouge-foncé);
+  box-shadow: 0 0 25px rgba(231, 76, 60, 0.5);
+  animation: shake 0.4s ease;
+}
+
+/* Style de tous les boutons */
+.btn {
+  color: white;
+  padding: 12px 25px;
+  border-radius: 30px;
+  border: none;
+  cursor: pointer;
+  font-size: 1em;
+  margin-top: 1em;
+  transition: all 0.3s ease;
+}
+.btn:hover{
+  transform: translateY(-3px);
+}
+
+.grp_btn{
+  display: flex;
+  gap: 1em;
+}
+
+.btn.commencer,
+.btn.play,
+.btn.submit,
+.win .go-back{
+  background: var(--vert-foncé);
+}
+.btn.commencer:hover,
+.btn.play:hover,
+.btn.submit:hover,
+.win .go-back:hover{
+  background: var(--vert-clair);
+}
+
+.btn.return,
+.btn.resign,
+.lose .go-back{
+  background: var(--rouge-foncé);
+}
+.btn.return:hover,
+.btn.resign:hover,
+.lose .go-back:hover{
+  background: var(--rouge-clair);
+}
+
+.btn.random{
+  border-radius: 8px;
+  background: var(--bleu-foncé);
+  margin: 0;
+}
+.btn.random:hover {
+  background: var(--bleu-clair);
+}
+
+.btn.return, .btn.play {
+  font-size: 1.25em;
+}
+
+/* PARTIE : configuration.html */
+.groupe-form{
+  margin: 20px 0;
+  text-align: left;
+}
+
+label {
+  display: block;
+  font-size: 1em;
+  margin-bottom: 0.5em;
+}
+
+select, input[type="range"] {
+  width: 100%;
+  padding: 0.5em;
+  border-radius: 8px;
+  border: none;
+}
+input[type="range"]{
+  padding: 0.5em 0;
+}
+
+#longueur{
+  accent-color: royalblue;
+}
+#difficulte{
+  accent-color: red;
+}
+
+
+/* PARTIE : play.html */
+.ligne{
+  display: grid;
+  grid-template-columns: repeat(var(--nb-lettre), 50px);
+  gap: 10px;
+  justify-content: center;
+  margin: 30px 0;
+}
+.case, .case_utilise {
+  width: 50px;
+  height: 50px;
+  border-radius: 8px;
+  background: rgba(241, 243, 244, 0.75);
+  color: #1f1f1f;
+  border: 2px solid #d3d6da;
+  text-align: center;
+  align-content: center;
+  font-size: 2em;
+  font-weight: bold;
+  transition: background 0.4s ease, color 0.4s ease;
+}
+.ligne .case_utilise.vert{
+  background: #6aaa64;
+  color: white;
+}
+.ligne .case_utilise.jaune {
+  background: #c9b458;
+  color: white;
+}
+.ligne .case_utilise.gris {
+  background: #787c7e;
+  color: white;
+}
+/* animation flip avec changement de couleur */
+.ligne.nouvelle .case_utilise.vert {
+  animation: flipVert 0.6s ease forwards;
+}
+
+.ligne.nouvelle .case_utilise.jaune {
+  animation: flipJaune 0.6s ease forwards;
+}
+
+.ligne.nouvelle .case_utilise.gris {
+  animation: flipGris 0.6s ease forwards;
+}
+
+/* keyframes : on reste neutre jusqu'à la moitié, puis on applique la couleur finale */
+@keyframes flipVert {
+  0%   { transform: rotateX(0); background: rgba(241, 243, 244, 0.75); color: #1f1f1f; }
+  50%  { transform: rotateX(90deg); }
+  100% { transform: rotateX(0); background: #6aaa64; color: white; }
+}
+
+@keyframes flipJaune {
+  0%   { transform: rotateX(0); background: rgba(241, 243, 244, 0.75); color: #1f1f1f; }
+  50%  { transform: rotateX(90deg); }
+  100% { transform: rotateX(0); background: #c9b458; color: white; }
+}
+
+@keyframes flipGris {
+  0%   { transform: rotateX(0); background: rgba(241, 243, 244, 0.75); color: #1f1f1f; }
+  50%  { transform: rotateX(90deg); }
+  100% { transform: rotateX(0); background: #787c7e; color: white; }
+}
+
+/* LightBox du message de fin partie */
+.lightbox {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(4px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  opacity: 0;
+  pointer-events: none;
+  z-index: 10;
+}
+
+.lightbox.active {
+  opacity: 1;
+  pointer-events: all;
+}
+
+/* Box */
+.lightbox-content {
+  background: #1e1e2f;
+  padding: 5%;
+  border-radius: 20px;
+  width: 90%;
+  max-width: 400px;
+  text-align: center;
+}
+/* Message */
+.result-message {
+  font-size: 1.4rem;
+  margin: 20px 0;
+}
+
+
