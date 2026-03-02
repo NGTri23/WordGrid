@@ -33,7 +33,7 @@
     {% endif %}
     
     <input type="text" name="mot_tentative" id="input_mot" maxlength="{{ configuration.longueur_mot }}"
-      style="opacity:0; position:absolute; left: -9999px;" required> <!-- l'input est caché ! -->
+      style="opacity:0; position:absolute; left: -9999px;" required autofocus> <!-- l'input est caché ! -->
 
     {% for _ in range(essais_restant) %}
       <div class="ligne" style="--nb-lettre: {{configuration.longueur_mot}};">
@@ -48,32 +48,23 @@
       const inputCache = document.getElementById("input_mot");
       let index = 0;
 
-      document.addEventListener("keydown", (e) => {
-          // Si c'est une lettre
-          if (e.key.length === 1 && e.key.match(/[a-z]/i)) {
-              if (index < {{configuration.longueur_mot}}) {
-                  const lettre = e.key.toUpperCase();
-                  cases[index].textContent = lettre;
+      inputCache.addEventListener("input", () => {
+        const valeur = inputCache.value.toUpperCase();
 
-                  // On ajoute la lettre dans l'input caché
-                  inputCache.value += lettre;
-                  index++;
-              }
-          }
-          // Si c'est Backspace
-          if (e.key === "Backspace") {
-              if (index > 0) {
-                  index--;
-                  cases[index].textContent = "";
-                  // On enlève la dernière lettre de l'input caché
-                  inputCache.value = inputCache.value.slice(0, -1);
-              }
-          }
-          // Si c'est la touche Enter
-          if (e.key === "Enter" && inputCache.value.length === {{configuration.longueur_mot}}){
-              const btn_soumettre= document.querySelector('input[name="soumettre_proposition"]')
-              btn_soumettre.click()
-          }
+        inputCache.value = valeur.replace(/[^A-Z]/g, "");
+
+        // Mise à jour des cases
+        cases.forEach((c, i) => {
+          c.textContent = inputCache.value[i] || "";
+        });
+
+        index = inputCache.value.length;
+      });
+      inputCache.addEventListener("keydown", (e) => {
+        if (e.key === "Enter" && inputCache.value.length === {{configuration.longueur_mot}}) {
+          const btn_soumettre= document.querySelector('input[name="soumettre_proposition"]')
+          btn_soumettre.click();
+        }
       });
 
       let running = true;
@@ -89,21 +80,22 @@
         }
         // lancement du chrono
         if (!running){ return;}
-        const now = Date.now() / 1000;
-        const elapsed = now - startTime;
+        if (chrono){
+          const now = Date.now() / 1000;
+          const elapsed = now - startTime;
 
-        const hours = Math.floor(elapsed / 3600);
-        const minutes = Math.floor((elapsed % 3600) / 60);
-        const seconds = (elapsed % 60).toFixed(2);
+          const hours = Math.floor(elapsed / 3600);
+          const minutes = Math.floor((elapsed % 3600) / 60);
+          const seconds = (elapsed % 60).toFixed(2);
 
-        chrono.textContent = `Votre temps : ${hours}h ${minutes}m ${seconds}s`;
+          chrono.textContent = `Votre temps : ${hours}h ${minutes}m ${seconds}s`;
+        }
       }, 50);
 
-      const case_play = document.querySelectorAll('.case');
       const input_mot = document.querySelector('input[name="mot_tentative"]');
-
-      case_play.forEach(chaque_case => {
+      cases.forEach(chaque_case => {
         chaque_case.addEventListener("click", () => {
+          console.log('ok focus')
           input_mot.focus();
         });
       });
