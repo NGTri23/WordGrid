@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+{% block bodyCode %}
+  <h1>WordGrid</h1>
+  <h2>🏆 Leaderboard</h2>
+
+  {% if scores %}
+	<table style="margin:auto; border-collapse: collapse; width: 80%; color: black;">
+	  <tr style="background-color:#333; color:white;">
+		<th>Mot</th>
+		<th>Difficulté</th>
+		<th>Tentatives</th>
+		<th>Temps</th>
+	  </tr>
+
+	  {% for score in scores %}
+		<tr style="background-color: {% if loop.index is even %}#f2f2f2{% else %}white{% endif %}; color:black;">
+		  <td>{{ score.mot }}</td>
+		  <td>{{ score.difficulte }}</td>
+		  <td>{{ score.tentatives }}</td>
+		  <td>{{ score.temps_affiche }}</td>
+		</tr>
+	  {% endfor %}
+	</table>
+  {% else %}
+    <p>Aucun score enregistré pour le moment.</p>
+  {% endif %}
+
+  <br>
+
+  <form action="{{ url_for('index') }}" method="post">
+      <input type="submit" value="Retour au menu" class="btn" style="background-color: red; color: white;">
+  </form>
+
+{% endblock %}

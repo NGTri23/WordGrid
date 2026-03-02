@@ -4,8 +4,109 @@ from Dictionary_manager import choix_dico
 from TRIE import utiliser_trie
 from Chronometre import Chronometre
 from random import randint
-import datetime #à sup
 import time #à sup
+import os
+import datetime
+LEADERBOARD_FILE = "leaderboard.txt"
+DIFFICULTES_LABEL = {
+    0: "Chill",
+    1: "Très facile",
+    2: "Facile",
+    3: "Normal",
+    4: "Moyen",
+    5: "Difficile",
+    6: "Très difficile"
+}
+
+def save_best_score_txt(mot: str, difficulte: int, tentatives_utilisees: int, temps_sec: float):
+
+    mot = (mot or "").strip().lower().replace(";", " ")
+
+    try:
+        new_time = float(temps_sec)
+    except:
+        new_time = float("inf")
+
+    date_iso = datetime.datetime.utcnow().isoformat()
+    new_line = f"{mot};{int(difficulte)};{int(tentatives_utilisees)};{new_time};{date_iso}\n"
+
+    # Si le fichier n'existe pas : on crée
+    if not os.path.exists(LEADERBOARD_FILE):
+        with open(LEADERBOARD_FILE, "w", encoding="utf-8") as f:
+            f.write(new_line)
+        return
+
+    out_lines = []
+    found = False
+
+    with open(LEADERBOARD_FILE, "r", encoding="utf-8") as f:
+        for line in f:
+            parts = line.strip().split(";")
+            if len(parts) != 5:
+                out_lines.append(line)
+                continue
+
+            w, d, old_attempts, old_time, old_date = parts
+
+            # Même mot + difficulté => comparer temps
+            if w == mot and int(d) == int(difficulte):
+                found = True
+                try:
+                    old_time_val = float(old_time)
+                except:
+                    old_time_val = float("inf")
+
+                # Remplace seulement si meilleur temps
+                if new_time < old_time_val:
+                    out_lines.append(new_line)
+                else:
+                    out_lines.append(line)
+                continue
+
+            out_lines.append(line)
+
+    # Si pas trouvé : on ajoute
+    if not found:
+        out_lines.append(new_line)
+
+    with open(LEADERBOARD_FILE, "w", encoding="utf-8") as f:
+        f.writelines(out_lines)
+
+def load_scores_txt(limit: int = 20):
+    if not os.path.exists(LEADERBOARD_FILE):
+        return []
+
+    scores = []
+
+    with open(LEADERBOARD_FILE, "r", encoding="utf-8") as f:
+        for line in f:
+            parts = line.strip().split(";")
+            if len(parts) != 5:
+                continue
+
+            mot, difficulte, tentatives, temps_sec, date_iso = parts
+
+            try:
+                temps_val = float(temps_sec)
+            except:
+                temps_val = float("inf")
+
+            c = Chronometre()
+            c.duree = temps_val
+            h, m, s = c.convertisseur()
+            temps_affiche = f"{h:02d}:{m:02d}:{s:05.2f}"
+
+            scores.append({
+                "mot": mot,
+                "difficulte": DIFFICULTES_LABEL.get(int(difficulte), "Inconnue"),
+                "tentatives": int(tentatives),
+                "temps_sec": temps_val,
+                "temps_affiche": temps_affiche,
+                "date": date_iso
+            })
+
+    scores.sort(key=lambda s: (s["temps_sec"], s["tentatives"], s["date"]))
+    return scores[:limit]
 
 #il faudra peut-etre plus tard à mettre les fct dans le meme fichier
 def img_background() -> str:
@@ -74,6 +175,7 @@ def menu_config():
 @app.route("/play", methods=["POST", "GET"])
 def game():
     fin_partie = False
+    session["score_saved"] = False
 
     donnee_config = dict(request.form)
     print(donnee_config)
@@ -111,6 +213,7 @@ def game():
         session["victoire"] = False
     elif "victoire" in session and session["victoire"]:
         session["temps_chrono"] = chrono.stop()
+        session["temps_sec"] = chrono.duree
         print(session["temps_chrono"])
         fin_partie = True
         
@@ -118,6 +221,7 @@ def game():
         session["essais_restant"] = 10 - configuration.difficulte
     elif session["essais_restant"] < 1: # vérification fin décompte essais
         session["temps_chrono"] = chrono.stop()
+        session["temps_sec"] = chrono.duree
         print(session["temps_chrono"])
         fin_partie = True
     
@@ -125,6 +229,22 @@ def game():
         session["temps_chrono"] = 0
         chrono.start()
         print(time.time())
+    if fin_partie and not session.get("score_saved", False):
+
+        tentatives_max = 10 - int(configuration.difficulte)
+        tentatives_utilisees = tentatives_max - int(session.get("essais_restant", 0))
+
+        if session.get("victoire", False) and configuration.modeJeu == "chrono":
+            save_best_score_txt(
+                mot=session.get("mot_secret", ""),
+                difficulte=int(configuration.difficulte),
+                tentatives_utilisees=tentatives_utilisees,
+                temps_sec=float(session.get("temps_sec", 0))
+            )
+
+    session["score_saved"] = True
+
+    session["score_saved"] = True
     return render_template("play.html", mot=session["mot_secret"],
                                        liste_langue=liste_langue,
                                        liste_theme=liste_theme,
@@ -142,6 +262,13 @@ def fin(): #pour supprimer tous les cookies de session
     print(session["victoire"])
     session.clear()
     return f"fin du jeu"
+
+@app.route("/leaderboard")
+def leaderboard():
+    scores = load_scores_txt(limit=20)
+    return render_template("leaderboard.html",
+                           scores=scores,
+                           image_fond=img_background())
 
 if __name__ == "__main__":
     app.run(host="127.0.0.1", port=5000)

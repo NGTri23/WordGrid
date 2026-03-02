@@ -11,4 +11,9 @@
       <input type="submit" value="Commencer" class="btn commencer">
     </div>
   </form>
+  <form action="{{ url_for('leaderboard') }}" method="get">
+    <div>
+      <input type="submit" value="Voir le Classement" class="btn" style="background-color: red; color: white;">
+    </div>
+  </form>
 {% endblock %}
