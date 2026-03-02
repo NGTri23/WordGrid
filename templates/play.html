@@ -98,6 +98,15 @@
 
         chrono.textContent = `Votre temps : ${hours}h ${minutes}m ${seconds}s`;
       }, 50);
+
+      const case_play = document.querySelectorAll('.case');
+      const input_mot = document.querySelector('input[name="mot_tentative"]');
+
+      case_play.forEach(chaque_case => {
+        chaque_case.addEventListener("click", () => {
+          input_mot.focus();
+        });
+      });
     </script>
 
     <div>
