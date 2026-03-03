@@ -35,14 +35,19 @@
     <input type="text" name="mot_tentative" id="input_mot" maxlength="{{ configuration.longueur_mot }}"
       style="opacity:0; position:absolute; left: -9999px;" required autofocus> <!-- l'input est caché ! -->
 
-    {% for _ in range(essais_restant) %}
+    <div class="ligne" style="--nb-lettre: {{configuration.longueur_mot}};">
+      {% for _ in range(configuration.longueur_mot) %}
+        <div class="case case_focus"></div>
+      {% endfor %}
+    </div>
+    
+    {% for _ in range(essais_restant-1) %}
       <div class="ligne" style="--nb-lettre: {{configuration.longueur_mot}};">
         {% for _ in range(configuration.longueur_mot) %}
-          <div class="case"></div>
+          <div class="case_non_utilise case_focus"></div>
         {% endfor %}
       </div>
     {% endfor %}
-    
     <script>
       const cases = document.querySelectorAll(".case");
       const inputCache = document.getElementById("input_mot");
@@ -51,7 +56,7 @@
       inputCache.addEventListener("input", () => {
         const valeur = inputCache.value.toUpperCase();
 
-        inputCache.value = valeur.replace(/[^A-Z]/g, "");
+        inputCache.value = valeur.replace(/[^A-Z ]/g, "");
 
         // Mise à jour des cases
         cases.forEach((c, i) => {
@@ -92,10 +97,10 @@
         }
       }, 50);
 
+      const cases_focus = document.querySelectorAll(".case_focus");
       const input_mot = document.querySelector('input[name="mot_tentative"]');
-      cases.forEach(chaque_case => {
+      cases_focus.forEach(chaque_case => {
         chaque_case.addEventListener("click", () => {
-          console.log('ok focus')
           input_mot.focus();
         });
       });
