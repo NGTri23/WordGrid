@@ -1,0 +1,19 @@
+<!-- Récupération code de base du html -->
+{% extends 'base.html' %}
+
+<!-- Corps du code -->
+{% block bodyCode %}
+  <h1>WordGrid</h1>
+  <h2>Game en Duo (1v1)</h2>
+  <!-- <p>cheat code : {{mot}}</p> -->
+  <form action="{{ url_for('game_duo') }}" method="post">
+    <p>Cette page est en cours d'incantation !</p>
+    <p>Vos sorciers du code vous préparent une surprise !</p>
+    <p>Revenez plus tard !</p>
+    <div>
+      <!-- Bouton pour revenir en arrière -->
+      <input type="submit" name="btn_revenir" class="btn return" 
+        value="Revenir en arrière" formnovalidate formaction="{{ url_for('menu_config') }}">
+    </div>
+  </form>
+{% endblock %}

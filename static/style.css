@@ -102,12 +102,14 @@ body{
 
 .btn.return,
 .btn.resign,
-.lose .go-back{
+.lose .go-back,
+.btn.leaderboard{
   background: var(--rouge-foncé);
 }
 .btn.return:hover,
 .btn.resign:hover,
-.lose .go-back:hover{
+.lose .go-back:hover,
+.btn.leaderboard:hover{
   background: var(--rouge-clair);
 }
 
@@ -246,6 +248,7 @@ input[type="range"]{
   width: 90%;
   max-width: 400px;
   text-align: center;
+  margin: 1em;
 }
 /* Message */
 .result-message {
@@ -253,4 +256,112 @@ input[type="range"]{
   margin: 20px 0;
 }
 
+/* Table leaderboard */
+/* Table */
+.leaderboard-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(255, 255, 255, 0.5);
+  transition: transform 0.35s ease, box-shadow 0.35s ease;
+}
+.leaderboard-table:hover{
+  transform: scale(1.05);
+}
+/* En-tête */
+.leaderboard-table thead tr {
+  background: linear-gradient(135deg, #ffbb3a, #5467ff);
+  color: white;
+  font-size: 1.1rem;
+}
 
+.leaderboard-table th {
+  padding: 14px 18px;
+  text-align: center;
+}
+
+/* Lignes */
+.leaderboard-table td {
+  padding: 12px 18px;
+  border: 1px solid black;
+  color: black;
+}
+.leaderboard-table td:last-child{
+  border-right: 0;
+}
+.leaderboard-table td:first-child{
+  border-left: 0;
+}
+/* Alternance */
+.leaderboard-table tr:nth-child(even) {
+  background: #f7f9fc;
+}
+
+/* Survol */
+.leaderboard-table tbody tr:hover {
+  background: #e8f0fe;
+  transition: 0.2s ease-in-out;
+}
+
+/* Dernière ligne sans bord */
+.leaderboard-table tr:last-child td {
+  border-bottom: none;
+}
+@media (max-width : 450px) {
+  .bloc_central{
+    margin: 5em 1em;
+    padding: 35px 20px;
+  }
+  .ligne{
+    grid-template-columns: repeat(var(--nb-lettre), 10%);
+    gap : 10px;
+    margin: 15px 0;
+  }
+  .case, .case_utilise, .case_non_utilise{
+    width: 100%;
+    height: 8.3vw;
+  }
+  .leaderboard-table th{
+    padding: 10px 0px;
+  }
+  .leaderboard-table td{
+    padding: 10px 10px;
+  }
+}
+@media (min-width : 451px) and (max-width : 600px) {
+  .bloc_central{
+    margin: 5em 1em;
+    padding: 40px 50px;
+  }
+  .ligne{
+    gap : 5px;
+    margin: 15px 0;
+  }
+  .case, .case_utilise, .case_non_utilise{
+    width: 40px;
+    height: 40px;
+  }
+}
+@media (max-width : 600px) {
+  .leaderboard-table,
+  .leaderboard-table thead tr{
+    font-size: 0.75em;
+  }
+  .btn{
+    padding: 10px 25px;    
+  }
+  .grp_btn{
+    gap:  0;
+    display: inline-flex;
+    flex-direction: column-reverse;
+  }
+  .btn.return, .btn.play {
+    font-size: 1em;
+  }
+  .btn.random{
+    font-size: 13px;
+    padding: 10px 15px;
+  }
+}

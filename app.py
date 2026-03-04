@@ -112,7 +112,7 @@ def load_scores_txt(limit: int = 20):
 def img_background() -> str:
     """Fonction pour retourner un path (en str) de l'image du background
     Cette image est tirée aléatoirement"""
-    
+
     return f"images/{randint(1,8)}.jpg"
 
 def comparer_mots(mot_secret : str, mot_proposé : str) -> str:
@@ -179,36 +179,42 @@ def game():
 
     donnee_config = dict(request.form)
     print(donnee_config)
-    
+
     trie = utiliser_trie(configuration) #faire entrer tous les mots dans l'arbre Trie
     for cle, valeur in donnee_config.items():
         if cle in ["langue", "theme", "longueur_mot", "difficulte", "modeJeu"] :
             setattr(configuration, cle, valeur)
+
         elif cle == "mot_tentative" and  trie.mot_present(valeur):
-            
+
             resultat_VJG = comparer_mots(session["mot_secret"], valeur.lower())
             session["liste_mot_proposé"] += [(valeur, resultat_VJG)] #privilégier l'utilisation de la concaténation que 'append'
-            
+
             if resultat_VJG.count("V") == configuration.longueur_mot:
                 session["victoire"] = True # le joueur a trouvé le mot
-            
+
             session["essais_restant"] -= 1 # décomptes à -1 aux essais
-            
+
         elif cle == "abandonne_partie" :
             fin_partie = True
             session["victoire"] = False  # abandon = défaite
-            
+
         elif cle == "btn_revenir" :
             return redirect("/configuration")
-            
+
+
+        if cle == "modeJeu" and valeur == "duo" :
+            return redirect("/play_duo")
+
+
     if "mot_secret" not in session : # session : c'est presque comme des Cookies
         session["mot_secret"] = choix_dico(configuration) # choisir le mot au hasard et le stocker jusqu'à la fin de la partie
     print(session["mot_secret"])
-    
+
     if "liste_mot_proposé" not in session:
         session["liste_mot_proposé"] = []
     print("liste_mot :", session["liste_mot_proposé"])
-    
+
     if "victoire" not in session :
         session["victoire"] = False
     elif "victoire" in session and session["victoire"]:
@@ -216,7 +222,7 @@ def game():
         session["temps_sec"] = chrono.duree
         print(session["temps_chrono"])
         fin_partie = True
-        
+
     if "essais_restant" not in session : # création session "essais_restant"
         session["essais_restant"] = 10 - configuration.difficulte
     elif session["essais_restant"] < 1: # vérification fin décompte essais
@@ -224,7 +230,7 @@ def game():
         session["temps_sec"] = chrono.duree
         print(session["temps_chrono"])
         fin_partie = True
-    
+
     if "temps_chrono" not in session :
         session["temps_chrono"] = 0
         chrono.start()
@@ -243,8 +249,6 @@ def game():
             )
 
     session["score_saved"] = True
-
-    session["score_saved"] = True
     return render_template("play.html", mot=session["mot_secret"],
                                        liste_langue=liste_langue,
                                        liste_theme=liste_theme,
@@ -256,12 +260,10 @@ def game():
                                        temps=chrono.convertisseur(),
                                        fin_partie=fin_partie,
                                        victoire=session["victoire"])
-#à sup
-@app.route("/fin")
-def fin(): #pour supprimer tous les cookies de session
-    print(session["victoire"])
-    session.clear()
-    return f"fin du jeu"
+@app.route("/play_duo")
+def game_duo():
+    return render_template("play_duo.html",
+                           image_fond=img_background())
 
 @app.route("/leaderboard")
 def leaderboard():

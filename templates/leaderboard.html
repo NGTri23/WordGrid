@@ -5,23 +5,27 @@
   <h2>🏆 Leaderboard</h2>
 
   {% if scores %}
-	<table style="margin:auto; border-collapse: collapse; width: 80%; color: black;">
-	  <tr style="background-color:#333; color:white;">
-		<th>Mot</th>
-		<th>Difficulté</th>
-		<th>Tentatives</th>
-		<th>Temps</th>
-	  </tr>
+    <table class="leaderboard-table">
+      <thead>
+        <tr>
+          <th>Mot</th>
+          <th>Difficulté</th>
+          <th>Tentatives</th>
+          <th>Temps</th>
+        </tr>
+      </thead>
 
-	  {% for score in scores %}
-		<tr style="background-color: {% if loop.index is even %}#f2f2f2{% else %}white{% endif %}; color:black;">
-		  <td>{{ score.mot }}</td>
-		  <td>{{ score.difficulte }}</td>
-		  <td>{{ score.tentatives }}</td>
-		  <td>{{ score.temps_affiche }}</td>
-		</tr>
-	  {% endfor %}
-	</table>
+      <tbody>
+        {% for score in scores %}
+          <tr>
+            <td>{{ score.mot }}</td>
+            <td>{{ score.difficulte }}</td>
+            <td>{{ score.tentatives }}</td>
+            <td>{{ score.temps_affiche }}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
   {% else %}
     <p>Aucun score enregistré pour le moment.</p>
   {% endif %}
@@ -29,7 +33,7 @@
   <br>
 
   <form action="{{ url_for('index') }}" method="post">
-      <input type="submit" value="Retour au menu" class="btn" style="background-color: red; color: white;">
+      <input type="submit" value="Retour au menu" class="btn return">
   </form>
 
 {% endblock %}

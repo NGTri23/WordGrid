@@ -7,7 +7,7 @@ from random import choice, randint
 liste_langue = {"fr" : "Français", "en" : "Anglais"}
 liste_theme = {"all" : "Tous", "natural" : "Nature"}
 liste_difficulte = {10: "Chill", 9: "Très facile", 8: "Facile", 7: "Normal", 6: "Moyen", 5: "Difficile", 4: "Très difficile"}
-liste_modeJeu = {"Normal" : "None", "Chronomètre" : "chrono"}
+liste_modeJeu = {"Normal" : "None", "Chronomètre" : "chrono", "Duo (1v1)" : "duo"}
 
 class GameConfig():
     """ Class pour configurer les choix du joueur """
@@ -47,7 +47,7 @@ class GameConfig():
         assert valeur in ['all', 'natural'], "Le thème choisie n'exite pas"
         self._theme = valeur
     def _choix_modeJeu(self, valeur):
-        assert valeur in ["None", "chrono"], "Le mode de jeu n'existe pas"
+        assert valeur in ["None", "chrono", "duo"], "Le mode de jeu n'existe pas"
         self._modeJeu = valeur
 
     # Les MUTATEURS pour longueur_mot ; difficulte ; langue ; theme
@@ -77,4 +77,3 @@ class GameConfig():
         self.difficulte = randint(0, 6)
         self.langue = choice(["fr", "en"])
         self.theme = choice(["all", "natural"])
-        self.modeJeu = choice(["None", "chrono"])
