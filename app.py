@@ -128,7 +128,7 @@ def comparer_mots(mot_secret : str, mot_proposé : str) -> str:
     for i in range(len(mot_secret)):
         if mot_secret[i] == mot_proposé[i]:
             resultat.append("V")
-            mot2_utilise[i] = None  # Marquer comme utilisée
+            mot2_utilise[i] = None
         else:
             resultat.append(None)
 
@@ -137,7 +137,7 @@ def comparer_mots(mot_secret : str, mot_proposé : str) -> str:
         if resultat[i] is None:
             if mot_proposé[i] in mot2_utilise:
                 resultat[i] = "J"
-                mot2_utilise[mot2_utilise.index(mot_proposé[i])] = None
+                mot2_utilise[mot2_utilise.index(mot_proposé[i])] = None 
             else:
                 resultat[i] = "G"
 
@@ -260,10 +260,117 @@ def game():
                                        temps=chrono.convertisseur(),
                                        fin_partie=fin_partie,
                                        victoire=session["victoire"])
-@app.route("/play_duo")
-def game_duo():
-    return render_template("play_duo.html",
-                           image_fond=img_background())
+
+@app.route("/play_duo", methods=["POST", "GET"])
+def play_duo():
+    fin_partie = False
+    trie = utiliser_trie(configuration)
+
+    # Initialisation
+    if "joueur_actif" not in session:
+        session["joueur_actif"] = 1
+
+    if "mot_secret_j1" not in session:
+        session["mot_secret_j1"] = choix_dico(configuration)
+        print(session["mot_secret_j1"])
+
+    if "mot_secret_j2" not in session:
+        session["mot_secret_j2"] = choix_dico(configuration)
+        print(session["mot_secret_j2"])
+
+    if "liste_mot_j1" not in session:
+        session["liste_mot_j1"] = []
+
+    if "liste_mot_j2" not in session:
+        session["liste_mot_j2"] = []
+
+    if "essais_j1" not in session:
+        session["essais_j1"] = 10 - int(configuration.difficulte)
+
+    if "essais_j2" not in session:
+        session["essais_j2"] = 10 - int(configuration.difficulte)
+
+    if "tour_transition" not in session:
+        session["tour_transition"] = False
+
+    if "victoire_j1" not in session:
+        session["victoire_j1"] = False
+
+    if "victoire_j2" not in session:
+        session["victoire_j2"] = False
+
+    if request.method == "POST":
+
+        if "btn_revenir" in request.form:
+            session.pop("joueur_actif", None)
+            session.pop("mot_secret_j1", None)
+            session.pop("mot_secret_j2", None)
+            session.pop("liste_mot_j1", None)
+            session.pop("liste_mot_j2", None)
+            session.pop("essais_j1", None)
+            session.pop("essais_j2", None)
+            session.pop("tour_transition", None)
+            session.pop("victoire_j1", None)
+            session.pop("victoire_j2", None)
+            return redirect("/configuration")
+
+        if "continuer_duo" in request.form:
+            session["tour_transition"] = False
+
+        elif "abandonne_partie" in request.form:
+            fin_partie = True
+
+        elif "mot_tentative" in request.form:
+            valeur = request.form["mot_tentative"].lower()
+
+            if trie.mot_present(valeur):
+
+                if session["joueur_actif"] == 1:
+                    resultat = comparer_mots(session["mot_secret_j1"], valeur)
+                    session["liste_mot_j1"] += [(valeur, resultat)]
+                    session["essais_j1"] -= 1
+
+                    if resultat.count("V") == configuration.longueur_mot:
+                        session["victoire_j1"] = True
+                        fin_partie = True
+                        session["tour_transition"] = False
+                    elif session["essais_j1"] <= 0:
+                        fin_partie = True
+                    else:
+                        session["joueur_actif"] = 2
+                        session["tour_transition"] = True
+
+                else:
+                    resultat = comparer_mots(session["mot_secret_j2"], valeur)
+                    session["liste_mot_j2"] += [(valeur, resultat)]
+                    session["essais_j2"] -= 1
+
+                    if resultat.count("V") == configuration.longueur_mot:
+                        session["victoire_j2"] = True
+                        fin_partie = True
+                        session["tour_transition"] = False
+                    elif session["essais_j2"] <= 0:
+                        fin_partie = True
+                    else:
+                        session["joueur_actif"] = 1
+                        session["tour_transition"] = True
+
+    return render_template(
+        "play_duo.html",
+        configuration=configuration,
+        joueur_actif=session["joueur_actif"],
+        mot_j1=session["mot_secret_j1"],
+        mot_j2=session["mot_secret_j2"],
+        liste_mot_j1=session["liste_mot_j1"],
+        liste_mot_j2=session["liste_mot_j2"],
+        essais_j1=session["essais_j1"],
+        essais_j2=session["essais_j2"],
+        tour_transition=session["tour_transition"],
+        image_fond=img_background(),
+        fin_partie=fin_partie,
+        victoire_j1=session["victoire_j1"],
+        victoire_j2=session["victoire_j2"]
+    )
 
 @app.route("/leaderboard")
 def leaderboard():
@@ -274,3 +381,4 @@ def leaderboard():
 
 if __name__ == "__main__":
     app.run(host="127.0.0.1", port=5000)
+

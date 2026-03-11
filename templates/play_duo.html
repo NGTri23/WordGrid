@@ -1,19 +1,151 @@
-<!-- Récupération code de base du html -->
 {% extends 'base.html' %}
 
-<!-- Corps du code -->
 {% block bodyCode %}
-  <h1>WordGrid</h1>
-  <h2>Game en Duo (1v1)</h2>
-  <!-- <p>cheat code : {{mot}}</p> -->
-  <form action="{{ url_for('game_duo') }}" method="post">
-    <p>Cette page est en cours d'incantation !</p>
-    <p>Vos sorciers du code vous préparent une surprise !</p>
-    <p>Revenez plus tard !</p>
-    <div>
-      <!-- Bouton pour revenir en arrière -->
-      <input type="submit" name="btn_revenir" class="btn return" 
-        value="Revenir en arrière" formnovalidate formaction="{{ url_for('menu_config') }}">
+
+<h1>WordGrid</h1>
+<h2>Mode Duo</h2>
+
+{% if tour_transition %}
+  <div class="lightbox active">
+    <div class="lightbox-content">
+      <h2>Changement de joueur</h2>
+      <p>Passez l'ordinateur au joueur {{ joueur_actif }}</p>
+
+      <form action="{{ url_for('play_duo') }}" method="post">
+        <input type="submit" name="continuer_duo" class="btn submit" value="Continuer">
+      </form>
     </div>
-  </form>
+  </div>
+{% endif %}
+
+<form action="{{ url_for('play_duo') }}" method="post">
+
+<p>Tour du joueur {{ joueur_actif }}</p>
+
+{% if joueur_actif == 1 %}
+  {% set liste_mot = liste_mot_j1 %}
+  {% set essais_restant = essais_j1 %}
+{% else %}
+  {% set liste_mot = liste_mot_j2 %}
+  {% set essais_restant = essais_j2 %}
+{% endif %}
+
+<p>Le mot à deviner : {{ configuration.longueur_mot }} lettres</p>
+<p>Il vous reste {{ essais_restant }} essais.</p>
+
+{% if liste_mot|length > 0 %}
+  {% for mot, couleur in liste_mot %}
+    <div class="ligne {% if loop.last %}nouvelle{% endif %}" style="--nb-lettre: {{configuration.longueur_mot}};">
+      {% for i in range(mot|length) %}
+        {% if couleur[i] == 'V' %}
+          <div class="case_utilise vert">{{mot[i].upper()}}</div>
+        {% elif couleur[i] == 'J' %}
+          <div class="case_utilise jaune">{{mot[i].upper()}}</div>
+        {% else %}
+          <div class="case_utilise gris">{{mot[i].upper()}}</div>
+        {% endif %}
+      {% endfor %}
+    </div>
+  {% endfor %}
+{% endif %}
+
+<input
+type="text"
+name="mot_tentative"
+id="input_mot"
+maxlength="{{ configuration.longueur_mot }}"
+style="opacity:0; position:absolute; left:-9999px;"
+required autofocus
+>
+
+<div class="ligne" style="--nb-lettre: {{configuration.longueur_mot}};">
+  {% for _ in range(configuration.longueur_mot) %}
+    <div class="case case_focus"></div>
+  {% endfor %}
+</div>
+
+{% for _ in range(essais_restant-1) %}
+<div class="ligne" style="--nb-lettre: {{configuration.longueur_mot}};">
+  {% for _ in range(configuration.longueur_mot) %}
+    <div class="case_non_utilise case_focus"></div>
+  {% endfor %}
+</div>
+{% endfor %}
+
+<div>
+  <!-- Bouton pour soumettre la réponse de la proposition -->
+  <input type="submit" name="soumettre_proposition" class="btn submit" value="Soumettre">
+</div> 
+
+<div>
+  <!-- Bouton pour annuler la partie -->
+  <input type="submit" name="abandonne_partie" 
+	class="btn resign" value="Abandonner la partie" formnovalidate>
+</div> 
+
+</form>
+
+<script>
+
+const cases = document.querySelectorAll(".case");
+const inputCache = document.getElementById("input_mot");
+
+inputCache.addEventListener("input", () => {
+
+  const valeur = inputCache.value.toUpperCase();
+
+  inputCache.value = valeur.replace(/[^A-Z]/g, "");
+
+  cases.forEach((c, i) => {
+    c.textContent = inputCache.value[i] || "";
+  });
+
+});
+
+const cases_focus = document.querySelectorAll(".case_focus");
+
+cases_focus.forEach(c => {
+  c.addEventListener("click", () => {
+    inputCache.focus();
+  });
+});
+
+</script>
+
+{% endblock %}
+
+{% block lightBoxkPlay %}
+	<form action="{{ url_for('play_duo') }}" method="post">
+	  {% if fin_partie %}
+		<div id="lightbox" class="lightbox active">
+		  <div class="lightbox-content {% if victoire_j1 or victoire_j2 %}win{% else %}lose{% endif %}">
+			<h2>Fin de la Partie</h2>
+
+			{% if victoire_j1 %}
+			  <p class="result-message">🎉 Joueur 1 a gagné !</p>
+			  <p>Le mot secret du joueur 1 est : {{ mot_j1 }}</p>
+			  <p>Le mot secret du joueur 2 est : {{ mot_j2 }}</p>
+
+			{% elif victoire_j2 %}
+			  <p class="result-message">🎉 Joueur 2 a gagné !</p>
+			  <p>Le mot secret du joueur 1 est : {{ mot_j1 }}</p>
+			  <p>Le mot secret du joueur 2 est : {{ mot_j2 }}</p>
+
+			{% else %}
+			  <p class="result-message">💀 Personne n'a gagné !</p>
+			  <p>Mot joueur 1 : {{ mot_j1 }}</p>
+			  <p>Mot joueur 2 : {{ mot_j2 }}</p>
+			{% endif %}
+
+			<div>
+			  <input type="submit" name="btn_revenir" class="btn go-back"
+				value="Revenir en arrière" formnovalidate>
+			</div>
+			
+		  </div>
+		</div>
+	  {% else %}
+		<div id="lightbox" class="lightbox" style="display: none;"></div>
+	  {% endif %}
+	</form>
 {% endblock %}
