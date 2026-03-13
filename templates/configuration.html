@@ -84,9 +84,8 @@
     </div>
 
     <div class="groupe-form">
-      <!-- Bouton pour sélectionner aléatoirement les config -->
-       <input type="submit" value="Configuration aléatoire"
-        formaction="{{ url_for('menu_config') }}" name="random" class="btn random">
+        <!-- Bouton pour sélectionner aléatoirement les config -->
+        <input type="button" value="Configuration aléatoire"class="btn random" onclick="ouvrirPopup(event)">
     </div>
     
     <div class="grp_btn">
@@ -96,6 +95,46 @@
       <!-- Bouton pour commencer une partie -->
       <input type="submit" name="commencer_partie" class="btn play"
         value="Lancer la partie">
-    </div>  
+    </div> 
+    <script>
+      const select = document.getElementById('modeJeu');
+      const btn = document.querySelector('.btn.play');
+
+      function updateFormAction() {
+        if (select.value === "duo") {
+          btn.setAttribute("formaction", "{{ url_for('play_duo') }}");
+        } else {
+          btn.removeAttribute("formaction"); // revient à l'action du <form>
+        }
+      }
+      select.addEventListener('change', updateFormAction);
+      updateFormAction(); // pour initialiser si "duo" est déjà sélectionné
+    </script>
+  </form>
+{% endblock %}
+
+{% block lightBoxRandomConfig %}
+  <form action="{{ url_for('menu_config') }}" method="post">
+    <div id="popup-confirmation" class="popup">
+      <div class="popup-content">
+        <p>⚠️ Les configurations vont être modifiées aléatoirement.</p>
+        <p>Voulez-vous continuer ?</p>
+
+        <div class="grp_btn">
+          <button type="submit" name="random" class="btn submit_random">Oui</button>
+          <button type="button" onclick="fermerPopup()" class="btn return_random">Non</button>
+        </div> 
+      </div>
+    </div>
+    <script>
+      function ouvrirPopup(event){
+        event.preventDefault();
+        document.getElementById("popup-confirmation").style.display = "flex";
+      }
+
+      function fermerPopup(){
+        document.getElementById("popup-confirmation").style.display = "none";
+      }
+    </script>
   </form>
 {% endblock %}

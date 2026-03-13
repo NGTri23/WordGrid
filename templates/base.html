@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}"/>
+	  <link rel="icon" type="image/png" href="../static/images/Logo.png">
     <title>WordGrid</title>
   </head>
   <body>
@@ -13,6 +14,7 @@
     <div class="bloc_central">
       {% block bodyCode %}{% endblock %}
     </div>
-    {% block lightBoxkPlay %}{% endblock %}
+    {% block lightBoxRandomConfig %}{% endblock %}
+    {% block lightBoxPlay %}{% endblock %}
   </body>
 </html>

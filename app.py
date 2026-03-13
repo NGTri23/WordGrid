@@ -160,7 +160,8 @@ def menu_config():
     donnee_config = dict(request.form)
     print(donnee_config) # à sup
 
-    session.clear() # supprimer tout le cache
+    session.clear() # supprimer tout le cache et session
+    
     if "random" in request.form: #le bouton random est cliqué
         configuration.random_config()
 
@@ -178,7 +179,7 @@ def game():
     session["score_saved"] = False
 
     donnee_config = dict(request.form)
-    print(donnee_config)
+    print(donnee_config) # à sup
 
     trie = utiliser_trie(configuration) #faire entrer tous les mots dans l'arbre Trie
     for cle, valeur in donnee_config.items():
@@ -209,18 +210,18 @@ def game():
 
     if "mot_secret" not in session : # session : c'est presque comme des Cookies
         session["mot_secret"] = choix_dico(configuration) # choisir le mot au hasard et le stocker jusqu'à la fin de la partie
-    print(session["mot_secret"])
+    print(session["mot_secret"]) # à sup
 
     if "liste_mot_proposé" not in session:
         session["liste_mot_proposé"] = []
-    print("liste_mot :", session["liste_mot_proposé"])
+    print("liste_mot :", session["liste_mot_proposé"]) # à sup
 
     if "victoire" not in session :
         session["victoire"] = False
     elif "victoire" in session and session["victoire"]:
         session["temps_chrono"] = chrono.stop()
         session["temps_sec"] = chrono.duree
-        print(session["temps_chrono"])
+        print(session["temps_chrono"]) # à sup
         fin_partie = True
 
     if "essais_restant" not in session : # création session "essais_restant"
@@ -228,13 +229,13 @@ def game():
     elif session["essais_restant"] < 1: # vérification fin décompte essais
         session["temps_chrono"] = chrono.stop()
         session["temps_sec"] = chrono.duree
-        print(session["temps_chrono"])
+        print(session["temps_chrono"]) # à sup
         fin_partie = True
 
     if "temps_chrono" not in session :
         session["temps_chrono"] = 0
         chrono.start()
-        print(time.time())
+        print(time.time()) # à sup
     if fin_partie and not session.get("score_saved", False):
 
         tentatives_max = 10 - int(configuration.difficulte)
@@ -263,20 +264,27 @@ def game():
 
 @app.route("/play_duo", methods=["POST", "GET"])
 def play_duo():
+
+    donnee_config = dict(request.form)
+    print(donnee_config) # à sup
+    for cle, valeur in donnee_config.items():
+        if cle in ["langue", "theme", "longueur_mot", "difficulte", "modeJeu"] :
+            setattr(configuration, cle, valeur)
+
     fin_partie = False
     trie = utiliser_trie(configuration)
 
-    # Initialisation
+    # Initialisation tous les sessions
     if "joueur_actif" not in session:
         session["joueur_actif"] = 1
 
     if "mot_secret_j1" not in session:
         session["mot_secret_j1"] = choix_dico(configuration)
-        print(session["mot_secret_j1"])
+        print(session["mot_secret_j1"]) # à sup
 
     if "mot_secret_j2" not in session:
         session["mot_secret_j2"] = choix_dico(configuration)
-        print(session["mot_secret_j2"])
+        print(session["mot_secret_j2"]) # à sup
 
     if "liste_mot_j1" not in session:
         session["liste_mot_j1"] = []
@@ -292,6 +300,9 @@ def play_duo():
 
     if "tour_transition" not in session:
         session["tour_transition"] = False
+    
+    if "transition_valide" not in session:
+        session["transition_valide"] = True
 
     if "victoire_j1" not in session:
         session["victoire_j1"] = False
@@ -300,18 +311,7 @@ def play_duo():
         session["victoire_j2"] = False
 
     if request.method == "POST":
-
         if "btn_revenir" in request.form:
-            session.pop("joueur_actif", None)
-            session.pop("mot_secret_j1", None)
-            session.pop("mot_secret_j2", None)
-            session.pop("liste_mot_j1", None)
-            session.pop("liste_mot_j2", None)
-            session.pop("essais_j1", None)
-            session.pop("essais_j2", None)
-            session.pop("tour_transition", None)
-            session.pop("victoire_j1", None)
-            session.pop("victoire_j2", None)
             return redirect("/configuration")
 
         if "continuer_duo" in request.form:
@@ -324,10 +324,11 @@ def play_duo():
             valeur = request.form["mot_tentative"].lower()
 
             if trie.mot_present(valeur):
-
+                session["transition_valide"] = True
                 if session["joueur_actif"] == 1:
                     resultat = comparer_mots(session["mot_secret_j1"], valeur)
                     session["liste_mot_j1"] += [(valeur, resultat)]
+                    print(1, session["liste_mot_j1"]) # à sup
                     session["essais_j1"] -= 1
 
                     if resultat.count("V") == configuration.longueur_mot:
@@ -343,6 +344,7 @@ def play_duo():
                 else:
                     resultat = comparer_mots(session["mot_secret_j2"], valeur)
                     session["liste_mot_j2"] += [(valeur, resultat)]
+                    print(2, session["liste_mot_j2"]) # à sup
                     session["essais_j2"] -= 1
 
                     if resultat.count("V") == configuration.longueur_mot:
@@ -354,6 +356,8 @@ def play_duo():
                     else:
                         session["joueur_actif"] = 1
                         session["tour_transition"] = True
+            else :
+                session["transition_valide"] = False
 
     return render_template(
         "play_duo.html",
@@ -366,6 +370,7 @@ def play_duo():
         essais_j1=session["essais_j1"],
         essais_j2=session["essais_j2"],
         tour_transition=session["tour_transition"],
+        transition_valide=session["transition_valide"],
         image_fond=img_background(),
         fin_partie=fin_partie,
         victoire_j1=session["victoire_j1"],

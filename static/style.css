@@ -85,8 +85,24 @@ body{
 .grp_btn{
   display: flex;
   gap: 1em;
+  justify-content: center;
 }
-
+/* Bouton Oui */
+.submit_random{
+  background: #3b82f6;
+  color: white;
+}
+.submit_random:hover{
+  background: #2563eb;
+}
+/* Bouton Annuler */
+.return_random{
+  background: #e5e7eb;
+  color: #374151;
+}
+.return_random:hover{
+  background: #d1d5db;
+}
 .btn.commencer,
 .btn.play,
 .btn.submit,
@@ -155,6 +171,33 @@ input[type="range"]{
   accent-color: red;
 }
 
+/* le pop up de confirmation random */
+.popup{
+  display:none;
+  position:fixed;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+  background:rgba(0,0,0,0.2);
+
+  justify-content:center;
+  align-items:center;
+}
+
+.popup-content{
+  background: #f0f6ff;
+  box-shadow: 0 20px 40px #3b82f666;
+  padding:20px;
+  border-radius:10px;
+  text-align:center;
+  max-width: 25%;
+}
+.popup-content p{
+  color: black;
+  font-weight: bold;
+  font-style: italic;
+}
 
 /* PARTIE : play.html */
 .ligne{

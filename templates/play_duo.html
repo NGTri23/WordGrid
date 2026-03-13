@@ -4,21 +4,20 @@
 
 <h1>WordGrid</h1>
 <h2>Mode Duo</h2>
-
-{% if tour_transition %}
+<!-- <p>cheat code : joueur1 -> {{mot_j1}} ; joueur2 -> {{mot_j2}}</p> -->
+<form action="{{ url_for('play_duo') }}" method="post">
+{% if tour_transition and not fin_partie and transition_valide %}
   <div class="lightbox active">
     <div class="lightbox-content">
       <h2>Changement de joueur</h2>
       <p>Passez l'ordinateur au joueur {{ joueur_actif }}</p>
 
-      <form action="{{ url_for('play_duo') }}" method="post">
-        <input type="submit" name="continuer_duo" class="btn submit" value="Continuer">
-      </form>
+      <input type="button" name="continuer_duo" class="btn submit" value="Continuer"
+        onclick="document.querySelector('.lightbox.active').style.display='none'"">
+
     </div>
   </div>
 {% endif %}
-
-<form action="{{ url_for('play_duo') }}" method="post">
 
 <p>Tour du joueur {{ joueur_actif }}</p>
 
@@ -94,7 +93,7 @@ inputCache.addEventListener("input", () => {
 
   const valeur = inputCache.value.toUpperCase();
 
-  inputCache.value = valeur.replace(/[^A-Z]/g, "");
+  inputCache.value = valeur.replace(/[^A-Z ]/g, "");
 
   cases.forEach((c, i) => {
     c.textContent = inputCache.value[i] || "";
@@ -114,7 +113,7 @@ cases_focus.forEach(c => {
 
 {% endblock %}
 
-{% block lightBoxkPlay %}
+{% block lightBoxPlay %}
 	<form action="{{ url_for('play_duo') }}" method="post">
 	  {% if fin_partie %}
 		<div id="lightbox" class="lightbox active">
