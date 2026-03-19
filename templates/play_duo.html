@@ -2,7 +2,7 @@
 
 {% block bodyCode %}
 
-<h1>WordGrid</h1>
+<img src="../static/images/logo.png" style="width:100%; vertical-align:middle; alt="WordGrid">
 <h2>Mode Duo</h2>
 <!-- <p>cheat code : joueur1 -> {{mot_j1}} ; joueur2 -> {{mot_j2}}</p> -->
 <form action="{{ url_for('play_duo') }}" method="post">
@@ -13,10 +13,29 @@
       <p>Passez l'ordinateur au joueur {{ joueur_actif }}</p>
 
       <input type="button" name="continuer_duo" class="btn submit" value="Continuer"
-        onclick="document.querySelector('.lightbox.active').style.display='none'"">
+        onclick="document.querySelector('.lightbox.active').style.display='none';
+				const input = document.getElementById('input_mot');
+				input.disabled = false;
+				input.focus()
+	  ">
 
     </div>
   </div>
+  <script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const input = document.getElementById("input_mot");
+    const lightbox = document.querySelector(".lightbox");
+	
+	if (!input || !lightbox) return;
+	const display = window.getComputedStyle(lightbox).display;
+	
+    if (display !== "none") {
+      input.disabled = true;
+    } else {
+      input.disabled = false;
+    }
+  });
+  </script>
 {% endif %}
 
 <p>Tour du joueur {{ joueur_actif }}</p>
@@ -34,7 +53,7 @@
 
 {% if liste_mot|length > 0 %}
   {% for mot, couleur in liste_mot %}
-    <div class="ligne {% if loop.last %}nouvelle{% endif %}" style="--nb-lettre: {{configuration.longueur_mot}};">
+    <div class="ligne {% if loop.last and bool_mot_présent %}nouvelle{% endif %}" style="--nb-lettre: {{configuration.longueur_mot}};">
       {% for i in range(mot|length) %}
         {% if couleur[i] == 'V' %}
           <div class="case_utilise vert">{{mot[i].upper()}}</div>

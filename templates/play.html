@@ -3,7 +3,7 @@
 
 <!-- Corps du code -->
 {% block bodyCode %}
-  <h1>WordGrid</h1>
+  <img src="../static/images/logo.png" style="width:100%; vertical-align:middle; alt="WordGrid">
   <h2>Game</h2>
   <!-- <p>cheat code : {{mot}}</p> -->
   <form action="{{ url_for('game') }}" method="post">
@@ -16,7 +16,7 @@
 
     {% if liste_mot|length > 0 %}
       {% for mot, couleur in liste_mot %}
-        <div class="ligne {% if loop.last %}nouvelle{% endif %}" style="--nb-lettre: {{configuration.longueur_mot}};">
+        <div class="ligne {% if loop.last and bool_mot_présent %}nouvelle{% endif %}" style="--nb-lettre: {{configuration.longueur_mot}};">
           {% for i in range(mot|length) %}
             {% if couleur[i] == 'V' %}
               <div class="case_utilise vert">{{mot[i].upper()}}</div>

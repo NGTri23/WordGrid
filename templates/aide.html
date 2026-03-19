@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+
+{% block bodyCode %}
+
+<h1>🧩 Aide - WordGrid</h1>
+
+<h2>🎯 But du jeu</h2>
+<p>
+Le but de <strong>WordGrid</strong> est de découvrir le <strong>mot secret</strong> en un nombre limité de tentatives.
+À chaque essai, tu proposes un mot et le jeu te donne des <strong>indices visuels</strong> pour t'aider à te rapprocher de la bonne réponse.
+Analyse bien les indices pour ajuster ta prochaine tentative !
+</p>
+
+<h2>⌨️ Comment jouer</h2>
+<p>
+Avant de commencer, tu peux <strong>paramétrer certains éléments</strong> pour personnaliser ta partie.
+</p>
+
+<p>
+1️⃣ Entre un mot dans la grille.<br>
+2️⃣ Valide ta proposition en appuyant sur <strong>Entrée</strong>.<br>
+3️⃣ Observe la couleur des lettres pour comprendre si elles sont correctes et bien placées.
+</p>
+
+<p>
+Après chaque tentative, les lettres changent de couleur afin de t'indiquer :
+si la lettre est correcte, mal placée ou absente du mot.
+Utilise ces informations pour affiner ta stratégie et trouver le mot secret !
+</p>
+
+<h2>🎮 Modes de jeu</h2>
+<p>
+WordGrid propose plusieurs modes pour varier l'expérience de jeu :
+</p>
+
+<p>
+<strong>🟢 NORMAL</strong><br>
+Le mode classique. Tu joues seul et tu dois deviner le mot en un nombre limité de tentatives.
+</p>
+
+<p>
+<strong>⏱️ CHRONOMÉTRÉ</strong><br>
+Même principe que le mode normal, mais cette fois ton <strong>temps de résolution est enregistré</strong>.
+À la fin de la partie, ton score peut apparaître dans le <strong>Leaderboard</strong> disponible sur la page d'accueil.
+Essaie de battre ton record !
+</p>
+
+<p>
+<strong>⚔️ DUO (1v1)</strong><br>
+Le mode <strong>multijoueur</strong>. Deux joueurs s'affrontent sur le même appareil.
+Chaque joueur doit deviner son propre mot. 
+Le premier à trouver la solution remporte la partie !
+</p>
+
+<h2>🎨 Signification des couleurs</h2>
+
+<p>
+<span style="color:green;"><strong>🟩 Vert</strong></span> : la lettre est <strong>correcte et bien placée</strong> dans le mot.<br><br>
+
+<span style="color:#c9b458;"><strong>🟨 Jaune</strong></span> : la lettre est <strong>présente dans le mot</strong> mais <strong>mal positionnée</strong>.<br><br>
+
+<span><strong>⬜ Gris</strong></span> : la lettre <strong>n'existe pas</strong> dans le mot à deviner.
+</p>
+
+<h2>📜 Règles du jeu</h2>
+<p>
+• Le mot à deviner possède un <strong>nombre fixe de lettres</strong>.<br>
+• Tu disposes d’un <strong>nombre limité de tentatives</strong> pour trouver la bonne réponse.<br>
+• Chaque mot proposé doit être un <strong>mot valide reconnu par le jeu</strong>.<br>
+• Le mot doit respecter le <strong>thème et la langue</strong> choisis.
+</p>
+
+<h2>🚀 Bonne chance !</h2>
+<p>
+Amuse-toi sur <strong>WordGrid</strong> et tente de trouver le mot secret le plus rapidement possible.
+Observe bien les indices, réfléchis à ta stratégie et tente de battre tes records !
+</p>
+
+{% endblock %}
