@@ -180,14 +180,16 @@ def game():
 
     donnee_config = dict(request.form)
     print(donnee_config) # à sup
-
+    bool_mot_présent = True
+    
     trie = utiliser_trie(configuration) #faire entrer tous les mots dans l'arbre Trie
     for cle, valeur in donnee_config.items():
+        if cle == "mot_tentative" :
+            bool_mot_présent = trie.mot_present(valeur)
         if cle in ["langue", "theme", "longueur_mot", "difficulte", "modeJeu"] :
             setattr(configuration, cle, valeur)
 
         elif cle == "mot_tentative" and  trie.mot_present(valeur):
-
             resultat_VJG = comparer_mots(session["mot_secret"], valeur.lower())
             session["liste_mot_proposé"] += [(valeur, resultat_VJG)] #privilégier l'utilisation de la concaténation que 'append'
 
@@ -259,6 +261,7 @@ def game():
                                        image_fond=img_background(),
                                        start_time=chrono.debut,
                                        temps=chrono.convertisseur(),
+                                       bool_mot_présent=bool_mot_présent,
                                        fin_partie=fin_partie,
                                        victoire=session["victoire"])
 
@@ -267,12 +270,16 @@ def play_duo():
 
     donnee_config = dict(request.form)
     print(donnee_config) # à sup
-    for cle, valeur in donnee_config.items():
-        if cle in ["langue", "theme", "longueur_mot", "difficulte", "modeJeu"] :
-            setattr(configuration, cle, valeur)
-
+    
     fin_partie = False
     trie = utiliser_trie(configuration)
+
+    bool_mot_présent = True
+    for cle, valeur in donnee_config.items():
+        if cle == "mot_tentative" :
+            bool_mot_présent = trie.mot_present(valeur)
+        if cle in ["langue", "theme", "longueur_mot", "difficulte", "modeJeu"] :
+            setattr(configuration, cle, valeur)
 
     # Initialisation tous les sessions
     if "joueur_actif" not in session:
@@ -374,7 +381,8 @@ def play_duo():
         image_fond=img_background(),
         fin_partie=fin_partie,
         victoire_j1=session["victoire_j1"],
-        victoire_j2=session["victoire_j2"]
+        victoire_j2=session["victoire_j2"],
+        bool_mot_présent=bool_mot_présent
     )
 
 @app.route("/leaderboard")
@@ -382,6 +390,11 @@ def leaderboard():
     scores = load_scores_txt(limit=20)
     return render_template("leaderboard.html",
                            scores=scores,
+                           image_fond=img_background())
+
+@app.route("/aide")
+def need_help():
+    return render_template("aide.html",
                            image_fond=img_background())
 
 if __name__ == "__main__":
