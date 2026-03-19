@@ -45,7 +45,7 @@ body{
   box-shadow: 0 20px 40px rgba(0,0,0,0.4);
   text-align: center;
   align-content: center;
-  min-width: 30%;
+  width: 30%;
   min-height: 40%;
   margin: 5em 0;
 }
@@ -356,6 +356,7 @@ input[type="range"]{
   .bloc_central{
     margin: 5em 1em;
     padding: 35px 20px;
+    min-width: 30%;
   }
   .ligne{
     grid-template-columns: repeat(var(--nb-lettre), 10%);
@@ -377,6 +378,7 @@ input[type="range"]{
   .bloc_central{
     margin: 5em 1em;
     padding: 40px 50px;
+    min-width: 80%;
   }
   .ligne{
     gap : 5px;
@@ -388,6 +390,9 @@ input[type="range"]{
   }
 }
 @media (max-width : 600px) {
+  .bloc_central{
+    min-width: 80%;
+  }
   .leaderboard-table,
   .leaderboard-table thead tr{
     font-size: 0.75em;
