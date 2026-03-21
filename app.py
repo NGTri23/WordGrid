@@ -113,7 +113,7 @@ def img_background() -> str:
     """Fonction pour retourner un path (en str) de l'image du background
     Cette image est tirée aléatoirement"""
 
-    return f"images/{randint(1,8)}.jpg"
+    return f"images/{randint(1,20)}.jpg"
 
 def comparer_mots(mot_secret : str, mot_proposé : str) -> str:
     """Fonction pour comparer le mot_secret à deviner et le mot_proposé par le joueur
