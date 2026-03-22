@@ -8,12 +8,143 @@
     <title>WordGrid</title>
   </head>
   <body>
-
+    <button type="button" id="btn_aide" onclick="openlightboxHelp()">Aide</button>
     <div style="--bg-image: url('{{ url_for('static', filename=image_fond) }}');" class="background"></div>
 
     <div class="bloc_central">
       {% block bodyCode %}{% endblock %}
     </div>
     {% block lightBoxPlay %}{% endblock %}
+
+    {% block lightBoxRandomConfig %}{% endblock %}
+    <button type="button" id="btn_quitter_lighboxHelp" onclick="closelightboxHelp()">&times;</button>
+    <div class="lightox_help">
+      <div class="lightbox_content_help">
+        
+        <div style="text-align: center;">
+          <img src="../static/images/logo.png" style="width:100%; vertical-align:middle;" alt="WordGrid">
+          <p id="sous_titre_aide">Guide du jeu</p>
+        </div>
+
+        <!-- But du jeu -->
+        <section>
+          <h2>Objectif</h2>
+          <p>
+            Trouvez le <strong>mot secret</strong> en un nombre limité de tentatives.
+            Après chaque essai, les lettres changent de couleur pour vous indiquer
+            si vous êtes sur la bonne voie.
+          </p>
+        </section>
+
+        <!-- Comment jouer -->
+        <section>
+          <h2>Comment jouer</h2>
+          <ol class="steps">
+            <li>Saisissez un mot dans la grille.</li>
+            <li>Validez avec la touche <strong>Entrée</strong>.</li>
+            <li>Observez les couleurs et ajustez votre prochaine tentative.</li>
+          </ol>
+        </section>
+
+        <!-- Couleurs -->
+        <section>
+          <h2>Signification des couleurs</h2>
+
+          <div class="ligne_help_exemple">
+            <div class="case_utilise vert">P</div>
+            <div class="case_utilise gris">O</div>
+            <div class="case_utilise jaune">I</div>
+            <div class="case_utilise gris">N</div>
+            <div class="case_utilise gris">T</div>
+          </div>
+
+          <div class="color-grid">
+            <div class="color-row">
+              <div class="case exemple_aide vert">A</div>
+              <div>
+                <p style="margin: 0 0 0.5em 0;"><strong>Bonne lettre, bonne position</strong></p>
+                <span>La lettre est dans le mot et correctement placée.</span>
+              </div>
+            </div>
+            <div class="color-row">
+              <div class="case exemple_aide jaune">A</div>
+              <div>
+                <p style="margin: 0 0 0.5em 0;"><strong>Bonne lettre, mauvaise position</strong></p>
+                <span>La lettre est dans le mot, mais à un autre emplacement.</span>
+              </div>
+            </div>
+            <div class="color-row">
+              <div class="case exemple_aide gris">A</div>
+              <div>
+                <p style="margin: 0 0 0.5em 0;"><strong>Lettre absente</strong></p>
+                <span>La lettre ne figure pas dans le mot.</span>
+              </div>
+            </div>
+          </div>
+        </section>
+        
+        <!-- Modes de jeu -->
+        <section>
+          <h2>Modes de jeu</h2>
+          <div class="modes">
+            <div class="mode-block">
+              <p><strong>Normal</strong></p>
+              <p>Le mode classique. Devinez le mot en un nombre limité de tentatives, sans contrainte de temps.</p>
+            </div>
+            <div class="mode-block">
+              <p><strong>Chronométré</strong></p>
+              <p>Même règles que le mode Normal, mais votre temps de résolution est enregistré. Les meilleurs scores apparaissent dans le classement sur la page d'accueil.</p>
+            </div>
+            <div class="mode-block">
+              <p><strong>Duo (1v1)</strong></p>
+              <p>Deux joueurs s'affrontent sur le même appareil, chacun devant trouver son propre mot. Le premier à trouver la solution remporte la partie.</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- Règles -->
+        <section>
+          <h2>Règles</h2>
+          <ul class="rules">
+            <li>Le mot à deviner comporte un nombre fixe de lettres.</li>
+            <li>Vous disposez d'un nombre limité de tentatives.</li>
+            <li>Chaque proposition doit être un mot valide reconnu par le jeu.</li>
+            <li>Le mot respecte la langue et le thème sélectionnés en début de partie.</li>
+          </ul>
+        </section>
+
+        <h2 style="text-align: center; border-top: 1px solid white;">Bonne chance !</h2>
+      </div>
+    </div>
+
+    <script>
+      function openlightboxHelp() {
+        const lightbox = document.querySelector(".lightox_help");
+        const bloc_central = document.querySelector(".bloc_central");
+        const body = document.body;
+        const btnClose = document.getElementById("btn_quitter_lighboxHelp");
+
+        if (!lightbox || !bloc_central) {return;}
+
+        body.style.alignItems = "normal";
+        bloc_central.style.position = "fixed";
+        lightbox.style.display = "flex";
+        btnClose.style.display = "block";
+      }
+
+      function closelightboxHelp(){
+        const lightbox = document.querySelector(".lightox_help");
+        const bloc_central = document.querySelector(".bloc_central");
+        const body = document.body;
+        const btnClose = document.getElementById("btn_quitter_lighboxHelp");
+
+        if (!lightbox || !bloc_central) {return;}
+
+        body.style.alignItems = "center";
+        bloc_central.style.position = "";
+        lightbox.style.display = "none";
+        btnClose.style.display = "none";
+      }
+    </script>
   </body>
 </html>

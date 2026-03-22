@@ -4,7 +4,7 @@ Demander : difficulté, longueur mot, lang, theme, random?
 """
 from random import choice, randint
 
-liste_langue = {"fr" : "Français", "en" : "Anglais"}
+liste_langue = {"fr" : "Français", "en" : "Anglais", "es" : "Espagnol"}
 liste_theme = {"all" : "Tous", "natural" : "Nature"}
 liste_difficulte = {10: "Chill", 9: "Très facile", 8: "Facile", 7: "Normal", 6: "Moyen", 5: "Difficile", 4: "Très difficile"}
 liste_modeJeu = {"Normal" : "None", "Chronomètre" : "chrono", "Duo (1v1)" : "duo"}
@@ -41,7 +41,7 @@ class GameConfig():
         assert 0 <= valeur <= 6, "La difficulté doit se situer entre 0 et 6, car 10 - 6 = 4"
         self._difficulte = valeur
     def _choix_langue(self, valeur):
-        assert valeur in ['fr', 'en'], "La langue choisie n'est pas valide"
+        assert valeur in ['fr', 'en', 'es'], "La langue choisie n'est pas valide"
         self._langue = valeur
     def _choix_theme(self, valeur):
         assert valeur in ['all', 'natural'], "Le thème choisie n'exite pas"
@@ -75,5 +75,5 @@ class GameConfig():
 
         self.longueur_mot = randint(4, 8)
         self.difficulte = randint(0, 6)
-        self.langue = choice(["fr", "en"])
+        self.langue = choice(["fr", "en", "es"])
         self.theme = choice(["all", "natural"])
