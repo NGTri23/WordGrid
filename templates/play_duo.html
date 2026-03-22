@@ -1,137 +1,107 @@
 {% extends 'base.html' %}
 
 {% block bodyCode %}
+<div class="duo_joueur{{ joueur_actif }}">
+  <img src="../static/images/logo.png" style="width:100%; vertical-align:middle;" alt="WordGrid">
+  <h2>Mode Duo</h2>
+  <!-- <p>cheat code : joueur1 -> {{mot_j1}} ; joueur2 -> {{mot_j2}}</p> -->
+  
+  <form action="{{ url_for('play_duo') }}" method="post">
 
-<img src="../static/images/logo.png" style="width:100%; vertical-align:middle;" alt="WordGrid">
-<h2>Mode Duo</h2>
-<!-- <p>cheat code : joueur1 -> {{mot_j1}} ; joueur2 -> {{mot_j2}}</p> -->
-<form action="{{ url_for('play_duo') }}" method="post">
-{% if tour_transition and not fin_partie and transition_valide %}
-  <div class="lightbox active">
-    <div class="lightbox-content">
-      <h2>Changement de joueur</h2>
-      <p>Passez l'ordinateur au joueur {{ joueur_actif }}</p>
+  <p>Tour du joueur {{ joueur_actif }}</p>
 
-      <input type="button" name="continuer_duo" class="btn submit" value="Continuer"
-        onclick="document.querySelector('.lightbox.active').style.display='none';
-				const input = document.getElementById('input_mot');
-				input.disabled = false;
-				input.focus()
-	  ">
+  {% if joueur_actif == 1 %}
+    {% set liste_mot = liste_mot_j1 %}
+    {% set essais_restant = essais_j1 %}
+  {% else %}
+    {% set liste_mot = liste_mot_j2 %}
+    {% set essais_restant = essais_j2 %}
+  {% endif %}
 
-    </div>
+  <p>Le mot à deviner : en {{ configuration.longueur_mot }} lettres, le thème : {{ liste_theme[configuration.theme] }}, en {{ liste_langue[configuration.langue] }}</p>
+  <p>Il vous reste {{ essais_restant }} essais.</p>
+
+  {% if liste_mot|length > 0 %}
+    {% for mot, couleur in liste_mot %}
+      <div class="ligne {% if loop.last and bool_mot_présent %}nouvelle{% endif %}" style="--nb-lettre: {{configuration.longueur_mot}};">
+        {% for i in range(mot|length) %}
+          {% if couleur[i] == 'V' %}
+            <div class="case_utilise vert">{{mot[i].upper()}}</div>
+          {% elif couleur[i] == 'J' %}
+            <div class="case_utilise jaune">{{mot[i].upper()}}</div>
+          {% else %}
+            <div class="case_utilise gris">{{mot[i].upper()}}</div>
+          {% endif %}
+        {% endfor %}
+      </div>
+    {% endfor %}
+  {% endif %}
+
+  <input
+  type="text"
+  name="mot_tentative"
+  id="input_mot"
+  maxlength="{{ configuration.longueur_mot }}"
+  style="opacity:0; position:absolute; left:-9999px;"
+  required autofocus
+  >
+
+  <div class="ligne" style="--nb-lettre: {{configuration.longueur_mot}};">
+    {% for _ in range(configuration.longueur_mot) %}
+      <div class="case case_focus"></div>
+    {% endfor %}
   </div>
+
+  {% for _ in range(essais_restant-1) %}
+  <div class="ligne" style="--nb-lettre: {{configuration.longueur_mot}};">
+    {% for _ in range(configuration.longueur_mot) %}
+      <div class="case_non_utilise case_focus"></div>
+    {% endfor %}
+  </div>
+  {% endfor %}
+
+  <div>
+    <!-- Bouton pour soumettre la réponse de la proposition -->
+    <input type="submit" name="soumettre_proposition" class="btn submit" value="Soumettre">
+  </div> 
+
+  <div>
+    <!-- Bouton pour annuler la partie -->
+    <input type="submit" name="abandonne_partie" 
+    class="btn resign" value="Abandonner la partie" formnovalidate>
+  </div> 
+
+  </form>
+
   <script>
-  document.addEventListener("DOMContentLoaded", () => {
-    const input = document.getElementById("input_mot");
-    const lightbox = document.querySelector(".lightbox");
-	
-	if (!input || !lightbox) return;
-	const display = window.getComputedStyle(lightbox).display;
-	
-    if (display !== "none") {
-      input.disabled = true;
-    } else {
-      input.disabled = false;
-    }
+
+  const cases = document.querySelectorAll(".case");
+  const inputCache = document.getElementById("input_mot");
+
+  inputCache.addEventListener("input", () => {
+
+    const valeur = inputCache.value.toUpperCase();
+
+    inputCache.value = valeur.replace(/[^A-Z ]/g, "");
+
+    cases.forEach((c, i) => {
+      c.textContent = inputCache.value[i] || "";
+    });
+
   });
+
+  const cases_focus = document.querySelectorAll(".case_focus");
+
+  cases_focus.forEach(c => {
+    c.addEventListener("click", () => {
+      inputCache.focus();
+    });
+  });
+
   </script>
-{% endif %}
-
-<p>Tour du joueur {{ joueur_actif }}</p>
-
-{% if joueur_actif == 1 %}
-  {% set liste_mot = liste_mot_j1 %}
-  {% set essais_restant = essais_j1 %}
-{% else %}
-  {% set liste_mot = liste_mot_j2 %}
-  {% set essais_restant = essais_j2 %}
-{% endif %}
-
-<p>Le mot à deviner : {{ configuration.longueur_mot }} lettres</p>
-<p>Il vous reste {{ essais_restant }} essais.</p>
-
-{% if liste_mot|length > 0 %}
-  {% for mot, couleur in liste_mot %}
-    <div class="ligne {% if loop.last and bool_mot_présent %}nouvelle{% endif %}" style="--nb-lettre: {{configuration.longueur_mot}};">
-      {% for i in range(mot|length) %}
-        {% if couleur[i] == 'V' %}
-          <div class="case_utilise vert">{{mot[i].upper()}}</div>
-        {% elif couleur[i] == 'J' %}
-          <div class="case_utilise jaune">{{mot[i].upper()}}</div>
-        {% else %}
-          <div class="case_utilise gris">{{mot[i].upper()}}</div>
-        {% endif %}
-      {% endfor %}
-    </div>
-  {% endfor %}
-{% endif %}
-
-<input
-type="text"
-name="mot_tentative"
-id="input_mot"
-maxlength="{{ configuration.longueur_mot }}"
-style="opacity:0; position:absolute; left:-9999px;"
-required autofocus
->
-
-<div class="ligne" style="--nb-lettre: {{configuration.longueur_mot}};">
-  {% for _ in range(configuration.longueur_mot) %}
-    <div class="case case_focus"></div>
-  {% endfor %}
 </div>
-
-{% for _ in range(essais_restant-1) %}
-<div class="ligne" style="--nb-lettre: {{configuration.longueur_mot}};">
-  {% for _ in range(configuration.longueur_mot) %}
-    <div class="case_non_utilise case_focus"></div>
-  {% endfor %}
-</div>
-{% endfor %}
-
-<div>
-  <!-- Bouton pour soumettre la réponse de la proposition -->
-  <input type="submit" name="soumettre_proposition" class="btn submit" value="Soumettre">
-</div> 
-
-<div>
-  <!-- Bouton pour annuler la partie -->
-  <input type="submit" name="abandonne_partie" 
-	class="btn resign" value="Abandonner la partie" formnovalidate>
-</div> 
-
-</form>
-
-<script>
-
-const cases = document.querySelectorAll(".case");
-const inputCache = document.getElementById("input_mot");
-
-inputCache.addEventListener("input", () => {
-
-  const valeur = inputCache.value.toUpperCase();
-
-  inputCache.value = valeur.replace(/[^A-Z ]/g, "");
-
-  cases.forEach((c, i) => {
-    c.textContent = inputCache.value[i] || "";
-  });
-
-});
-
-const cases_focus = document.querySelectorAll(".case_focus");
-
-cases_focus.forEach(c => {
-  c.addEventListener("click", () => {
-    inputCache.focus();
-  });
-});
-
-</script>
-
 {% endblock %}
-
+<!-- Lightbox message de fin -->
 {% block lightBoxPlay %}
 	<form action="{{ url_for('play_duo') }}" method="post">
 	  {% if fin_partie %}
@@ -166,4 +136,38 @@ cases_focus.forEach(c => {
 		<div id="lightbox" class="lightbox" style="display: none;"></div>
 	  {% endif %}
 	</form>
+{% endblock %}
+<!-- Lightbox message de transition entre 2 joueurs -->
+{% block lightboxTransition %}
+  {% if tour_transition and not fin_partie and transition_valide %}
+    <div class="lightbox active">
+      <div class="lightbox-content content_joueur{{ joueur_actif}}">
+        <h2>Changement de joueur</h2>
+        <p>Passez l'ordinateur au joueur {{ joueur_actif }}</p>
+
+        <input type="button" name="continuer_duo" class="btn submit" value="Continuer"
+          onclick="document.querySelector('.lightbox.active').style.display='none';
+          const input = document.getElementById('input_mot');
+          input.disabled = false;
+          input.focus()
+      ">
+
+      </div>
+    </div>
+    <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const input = document.getElementById("input_mot");
+      const lightbox = document.querySelector(".lightbox");
+    
+    if (!input || !lightbox) return;
+    const display = window.getComputedStyle(lightbox).display;
+    
+      if (display !== "none") {
+        input.disabled = true;
+      } else {
+        input.disabled = false;
+      }
+    });
+    </script>
+  {% endif %}
 {% endblock %}

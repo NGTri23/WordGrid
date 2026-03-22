@@ -49,6 +49,16 @@ body{
   min-height: 40%;
   margin: 5em 0;
 }
+.bloc_central:has(.duo_joueur1),
+.content_joueur1{
+  box-shadow: 0 0 40px rgba(0, 0, 255, 0.75);
+  border: 1px solid white;
+}
+.bloc_central:has(.duo_joueur2),
+.content_joueur2{
+  box-shadow: 0 0 40px rgba(255, 179, 0, 0.75);
+  border: 1px solid white;
+}
 .bloc_central h1{
   font-size: 3em;
   margin: 0;

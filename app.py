@@ -342,7 +342,7 @@ def play_duo():
                         session["victoire_j1"] = True
                         fin_partie = True
                         session["tour_transition"] = False
-                    elif session["essais_j1"] <= 0:
+                    elif session["essais_j2"] <= 0 and session["essais_j1"] <= 0 :
                         fin_partie = True
                     else:
                         session["joueur_actif"] = 2
@@ -358,7 +358,7 @@ def play_duo():
                         session["victoire_j2"] = True
                         fin_partie = True
                         session["tour_transition"] = False
-                    elif session["essais_j2"] <= 0:
+                    elif session["essais_j2"] <= 0 and session["essais_j1"] <= 0 :
                         fin_partie = True
                     else:
                         session["joueur_actif"] = 1
@@ -369,6 +369,8 @@ def play_duo():
     return render_template(
         "play_duo.html",
         configuration=configuration,
+        liste_langue=liste_langue,
+        liste_theme=liste_theme,
         joueur_actif=session["joueur_actif"],
         mot_j1=session["mot_secret_j1"],
         mot_j2=session["mot_secret_j2"],
@@ -390,11 +392,6 @@ def leaderboard():
     scores = load_scores_txt(limit=20)
     return render_template("leaderboard.html",
                            scores=scores,
-                           image_fond=img_background())
-
-@app.route("/aide")
-def need_help():
-    return render_template("aide.html",
                            image_fond=img_background())
 
 if __name__ == "__main__":
