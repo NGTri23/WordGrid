@@ -4,12 +4,6 @@
 
 ### Jeu de devinette de mots inspiré de Wordle — enrichissez votre vocabulaire en jouant, en français, anglais ou espagnol.
 
-<br>
-
-[![Python](https://img.shields.io/badge/Python-3.8+-3776AB?style=flat-square&logo=python&logoColor=white)](https://www.python.org/)
-[![Flask](https://img.shields.io/badge/Flask-Web-000000?style=flat-square&logo=flask&logoColor=white)](https://flask.palletsprojects.com/)
-[![GitHub](https://img.shields.io/badge/GitHub-WordGrid-181717?style=flat-square&logo=github&logoColor=white)](https://github.com/NGTri23/WordGrid)
-
 </div>
 
 ---
