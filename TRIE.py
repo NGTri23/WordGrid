@@ -1,3 +1,11 @@
+"""
+Projet : WORDGRID
+Auteurs : Valentin BORNE, Minh Tri NGUYEN
+"""
+
+""" Fichier TRIE.py """
+""" Pour la gestion des mots d'un dictionnaire """
+
 class TrieNoeud:
     """Class pour instancier un Noeud d'un arbre
     qui a pour attributs :

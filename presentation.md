@@ -1,4 +1,4 @@
-# WORDGRID
+<img src="static/images/logo_vert.png" alt="logo" width="500"/>
 
 ## 1. Présentation du projet
 
@@ -11,8 +11,8 @@ L’objectif est donc de créer un jeu de devinette de mots, facile à prendre e
 ## 2. Organisation du travail
 
 ### Équipe et Rôles
-- Valentiv BORNE : s'occupe principalement la partie logique et interne du programme.
-- Minh Tri NGUYEN : s'occupe principalement la partie interface du projet.
+- Valentin BORNE qui s'occupe principalement la partie logique et interne du programme.
+- Minh Tri NGUYEN qui s'occupe principalement la partie interface du projet et la connection entre le Python à du Html.
 
 ### Temps passé
 Nous avons consacré au moins  40 heures à ce projet.
@@ -35,7 +35,7 @@ Enfin, nous avons ajouté des fonctionnalités supplémentaires, comme le mode d
 
 ### Difficultés rencontrées et solutions
 - Gestion des lettres doublées : au début, le programme marquait parfois une lettre comme "J" plusieurs fois alors qu’elle n’apparaissait qu’une seule fois dans le mot secret.  
-  **Solution** : nous avons créé une copie du mot secret (`mot2_utilise`) et chaque fois qu’une lettre était utilisée pour un "V" ou un "J", elle était remplacée par `None`. Cela permet d’éviter de compter deux fois la même lettre et de gérer correctement les doublons.
+  **Solution** : nous avons créé une copie du mot et chaque fois qu’une lettre était utilisée pour un "V" ou un "J", elle était remplacée par `None`. Cela permet d’éviter de compter deux fois la même lettre et de gérer correctement les doublons.
 - Vérification des mots proposés : au début, la vérification de la validité d’un mot se faisait en parcourant toute la liste des mots, ce qui était lent et peu efficace, surtout avec des dictionnaires volumineux.  
   **Solution** : nous avons utilisé un arbre **TRIE** pour stocker tous les mots de la longueur choisie dans la configuration. Ainsi, la vérification d’un mot proposé par le joueur se fait très rapidement en cherchant simplement dans l’arbre.
 - Choix de l’interface : au départ, nous hésitions entre Pygame et une interface web (HTML/CSS).  

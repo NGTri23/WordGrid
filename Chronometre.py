@@ -1,9 +1,18 @@
+"""
+Projet : WORDGRID
+Auteurs : Valentin BORNE, Minh Tri NGUYEN
+"""
+
+""" Fichier Chronometre.py """
+""" Contient la Class Chronometre pour la gestion du chronomètre du mode Chrono"""
+
 import time
 
 class Chronometre:
     """ Class pour chronométrer les parties """
     
     def __init__(self):
+        """ Constructeur """
         self.debut = None
         self.fin = None
         self.duree = 0 # en secondes (et non formalisé)

@@ -1,6 +1,11 @@
+"""
+Projet : WORDGRID
+Auteurs : Valentin BORNE, Minh Tri NGUYEN
+"""
+
 """ Fichier config.py """
 """ Contient la Class GameConfig :
-Demander : difficulté, longueur mot, lang, theme, random?
+Demander : difficulté, longueur mot, lang, theme, random
 """
 from random import choice, randint
 
