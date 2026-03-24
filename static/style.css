@@ -223,17 +223,27 @@ input[type="range"]{
   margin: 30px 0;
 }
 .case, .case_utilise, .case_non_utilise{
-  width: 50px;
-  height: 50px;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1 / 1;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2em;
   border-radius: 8px;
   background: rgba(241, 243, 244, 0.75);
   color: #1f1f1f;
   border: 2px solid #d3d6da;
   text-align: center;
   align-content: center;
-  font-size: 2em;
   font-weight: bold;
   transition: background 0.4s ease, color 0.4s ease;
+}
+.case.case.exemple_aide{
+  width: 50px;
+  height: 50px;
+  font-size: 2em;
 }
 .ligne .case_utilise.vert,
 .case.exemple_aide.vert,
@@ -477,19 +487,32 @@ section {
   border-bottom: none;
 }
 @media (max-width : 450px) {
-  .bloc_central{
+  .bloc_central,
+  .lightbox_content_help{
     margin: 5em 1em;
     padding: 35px 20px;
     min-width: 30%;
   }
   .ligne{
-    grid-template-columns: repeat(var(--nb-lettre), 10%);
-    gap : 10px;
+    grid-template-columns: repeat(var(--nb-lettre), 1fr);
+    /* gap : 5%; */
     margin: 15px 0;
+  }
+  .case.exemple_aide{
+    min-width: 35px;
+    min-height: 35px;
+    width: 35px;
+    height: 35px;
   }
   .case, .case_utilise, .case_non_utilise{
     width: 100%;
-    height: 8.3vw;
+    height: auto;
+    aspect-ratio: 1 / 1;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: calc(2rem / var(--nb-lettre) * 5);
   }
   .leaderboard-table th{
     padding: 10px 0px;
@@ -499,7 +522,8 @@ section {
   }
 }
 @media (min-width : 451px) and (max-width : 600px) {
-  .bloc_central{
+  .bloc_central,
+  .lightbox_content_help{
     margin: 5em 1em;
     padding: 40px 50px;
     min-width: 80%;
@@ -513,8 +537,9 @@ section {
     height: 40px;
   }
 }
-@media (max-width : 600px) {
-  .bloc_central{
+@media (max-width : 800px) {
+  .bloc_central,
+  .lightbox_content_help{
     min-width: 80%;
   }
   .leaderboard-table,
@@ -535,5 +560,10 @@ section {
   .btn.random{
     font-size: 13px;
     padding: 10px 15px;
+  }
+}
+@media (max-width : 1400px) {
+  .bloc_central{
+    width: 40%;
   }
 }
