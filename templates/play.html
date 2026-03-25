@@ -82,6 +82,38 @@
         }
       });
 
+      cases.forEach((c, i) => {
+        c.addEventListener("click", () =>{
+          inputCache.focus();
+          inputCache.setSelectionRange(i+1, i+1); // Placer le curseur dans l'input
+          updatecurseur();
+        });
+      });
+
+      const updatecurseur = () => {
+        index = inputCache.selectionStart;
+        
+        cases.forEach((c, i) => {
+          c.classList.toggle("curseur", (i+1) === index);
+        });
+      };
+
+      inputCache.addEventListener("input", updatecurseur);
+      inputCache.addEventListener("keyup", updatecurseur);
+      inputCache.addEventListener("focus", updatecurseur);
+
+      const cases_focus = document.querySelectorAll(".case_focus");
+      const input_mot = document.querySelector('input[name="mot_tentative"]');
+      cases_focus.forEach(chaque_case => {
+        chaque_case.addEventListener("click", () => {
+          if (chaque_case){}
+          input_mot.focus();
+        });
+      });
+      inputCache.addEventListener("blur", () => {
+        cases.forEach(c => c.classList.remove("curseur"));
+      });
+
       let running = true;
       const startTime = {{ start_time }};
       setInterval(() => {
@@ -106,14 +138,6 @@
           chrono.textContent = `Votre temps : ${hours}h ${minutes}m ${seconds}s`;
         }
       }, 50);
-
-      const cases_focus = document.querySelectorAll(".case_focus");
-      const input_mot = document.querySelector('input[name="mot_tentative"]');
-      cases_focus.forEach(chaque_case => {
-        chaque_case.addEventListener("click", () => {
-          input_mot.focus();
-        });
-      });
     </script>
 
     <div>

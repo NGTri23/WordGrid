@@ -1,0 +1,4 @@
+Nature du code et usage de l'IA
+
+Dans ce projet, la majorité du travail a été réalisée par les élèves. L’IA n’a donc pas été utilisée pour générer intégralement le code.
+Concernant les parties écrites en JavaScript, l’intelligence artificielle a été utilisée comme un outil de support. Puis le code a ensuite été relu, modifié et adapté par les élèves afin de correspondre aux besoins du projet.
