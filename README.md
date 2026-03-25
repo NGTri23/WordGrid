@@ -2,7 +2,7 @@
 
 <img src="static/images/logo_vert.png" alt="logo" width="500"/>
 
-### Jeu de devinette de mots inspiré de Wordle — enrichissez votre vocabulaire en jouant, en français, anglais ou espagnol.
+### Jeu de devinette de mots — enrichissez votre vocabulaire en jouant, en français, anglais ou espagnol.
 
 </div>
 
